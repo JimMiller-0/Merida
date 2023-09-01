@@ -1,2 +1,2 @@
 # Merida
-Gen AI Application Security API
+LLM Application Security Service (LASS)
