@@ -1,7 +1,7 @@
-from services.input.promptinjection import api as input_pi_checks_ns
-from services.input.safety import api as input_safety_ns
-from services.output.out_safety import api as output_safety_ns
-from services.threatmgmt import api as threatmgmt_ns
+from api.services.input.promptinjection import api as input_pi_checks_ns
+from api.services.input.safety import api as input_safety_ns
+from api.services.output.out_safety import api as output_safety_ns
+from api.services.threatmgmt import api as threatmgmt_ns
 
 from flask import Blueprint
 from flask_restx import Api

@@ -1,6 +1,6 @@
 from flask import Flask
 from flask import make_response
-from api.aservices import blueprint as api
+from api.routes.routes import blueprint as api
 
 
 # flask app factory to create app
