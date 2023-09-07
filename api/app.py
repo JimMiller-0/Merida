@@ -1,11 +1,11 @@
-from flask import Flask
+from flask import Flask, render_template, request, Response
 from flask import make_response
 from api.routes.routes import blueprint as api
 import sqlalchemy
 import logging
 import os
-
-from api.config.connect_tcp import connect_tcp_socket
+from api.db.connect_tcp import connect_tcp_socket
+from api.db.db import init_connection_pool, migrate_db
 
 
 # flask app factory to create app
@@ -16,15 +16,13 @@ def create_app():
 
     logger = logging.getLogger()
 
-    def init_connection_pool() -> sqlalchemy.engine.base.Engine:
-    # use a TCP socket when INSTANCE_HOST (e.g. 127.0.0.1) is defined
-        if os.environ.get("INSTANCE_HOST"):
-            return connect_tcp_socket()
 
-        raise ValueError(
-            "Missing database connection parameter. Please define INSTANCE_HOST"
-        )
-
+    # init_db lazily instantiates a database connection pool. Users of Cloud Run or
+    # App Engine may wish to skip this lazy instantiation and connect as soon
+    # as the function is loaded. This is primarily to help testing.
+    with app.app_context():
+                db = init_connection_pool()
+                migrate_db(db)
 
     @app.route("/", methods=["GET"])
     def home():
