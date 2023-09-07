@@ -1,5 +1,6 @@
 flask
 flask-restx
+sqlalchemy
 python-dotenv
 google-cloud-dlp
 google-cloud-aiplatform
