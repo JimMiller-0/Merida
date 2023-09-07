@@ -1,7 +1,7 @@
 # Merida
 LLM Application Security Service (LASS)
 
-
+Run Local - for Dev
 
 1. pip install -r requirements.txt
 2. export PROJECT_ID=<project_id>
@@ -14,5 +14,7 @@ LLM Application Security Service (LASS)
 4. gcloud alloydb instances list
 5. export INSTANCE_URI=<instance uri from last command>
 6. nohup ./alloydb-auth-proxy $INSTANCE_URI
-
 4. flask run
+
+
+Run in GCP - for Prod
