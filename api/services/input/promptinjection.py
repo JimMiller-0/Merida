@@ -43,7 +43,7 @@ class PIList(Resource):
 
 @api.route("/wrapping", methods=["POST"])
 @api.response(404, "Error")
-class DLP(Resource):
+class Wrapping(Resource):
     @api.doc("post_wrapping")
    # @api.marshal_with(wrapping)
     def post(self):
@@ -88,6 +88,21 @@ class DLP(Resource):
                  return make_response({"pi_detected":"True"}, 200)
             else:
                  return make_response({"pi_detected":"False"}, 200)
+            
+
+@api.route("/ve-compare", methods=["POST"])
+@api.response(404, "Error")
+class VECompare(Resource):
+    @api.doc("post_ve_compare")
+   # @api.marshal_with(wrapping)
+    def post(self):
+            user_input = request.form.get("user_input")
+            PROJECT_ID=os.environ.get("PROJECT_ID")
+
+            def ve_compare():
+                 return
+            return
+    
 
 
 
