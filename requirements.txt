@@ -5,3 +5,5 @@ pg8000
 python-dotenv
 google-cloud-dlp
 google-cloud-aiplatform
+langchain
+pylance
