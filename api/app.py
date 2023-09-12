@@ -5,7 +5,7 @@ import sqlalchemy
 import logging
 import os
 from api.db.connect_tcp import connect_tcp_socket
-from api.db.db import init_connection_pool, migrate_db
+from api.db.db import init_connection_pool, migrate_db, pidetect_db, extension_db, index_table
 
 
 # flask app factory to create app
@@ -23,6 +23,8 @@ def create_app():
     with app.app_context():
                 db = init_connection_pool()
                 migrate_db(db)
+                extension_db(db)
+                pidetect_db(db)    
 
     @app.route("/", methods=["GET"])
     def home():
