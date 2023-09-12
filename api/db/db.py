@@ -19,9 +19,11 @@ def init_connection_pool() -> sqlalchemy.engine.base.Engine:
     
     # create 'votes' table in database if it does not already exist
 def migrate_db(db: sqlalchemy.engine.base.Engine) -> None:
-        query_db_create='CREATE TABLE IF NOT EXISTS testvote (vote_id SERIAL NOT NULL, time_cast timestamp NOT NULL, candidate VARCHAR(6) NOT NULL, PRIMARY KEY (vote_id) );'
+        query_db_create='CREATE TABLE IF NOT EXISTS votes (vote_id SERIAL NOT NULL, time_cast timestamp NOT NULL, candidate VARCHAR(6) NOT NULL, PRIMARY KEY (vote_id) );'
         with db.connect() as conn:
             conn.execute(sqlalchemy.text(query_db_create))
+            conn.commit()
+
 
 
 

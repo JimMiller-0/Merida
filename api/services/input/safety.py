@@ -6,7 +6,7 @@ import sqlalchemy
 import logging   
 import google.cloud.dlp
 from typing import List, Dict
-from api.db.db import init_connection_pool
+from api.db.db import init_connection_pool, migrate_db
 
 api = Namespace("dlp", description="inspect user input for PII and redact")
 
@@ -91,7 +91,8 @@ class DLP(Resource):
             team = request.form.get("team")
             db = init_connection_pool()
             time_cast = datetime.now()
-        
+            migrate_db(db)
+
             def save_vote(db: sqlalchemy.engine.base.Engine, team: str) -> Response:
                
                 # Verify that the team is one of the allowed options
