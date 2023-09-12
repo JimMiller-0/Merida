@@ -32,7 +32,7 @@ PIDETECT_RESPONSE = [
     {"user_input": "medor", "pi_detected": "Medor"},
 ]
 
-
+logger = logging.getLogger()
 @api.route("/")
 class PIList(Resource):
     @api.doc("list_pi")
@@ -98,9 +98,61 @@ class VECompare(Resource):
     def post(self):
             user_input = request.form.get("user_input")
             PROJECT_ID=os.environ.get("PROJECT_ID")
+            db = init_connection_pool()
+            time_cast = datetime.now()
 
-            def ve_compare():
-                 return
+            def ve_compare(db: sqlalchemy.engine.base.Engine, team: str) -> Response:
+                 
+                 # create embedding
+                     
+                sql_embedding = sqlalchemy.text(
+                    "SELECT embedding('textembedding-gecko@001', :user_input)"
+                )
+                try:
+                    # Using a with statement ensures that the connection is always released
+                    # back into the pool at the end of statement (even if an error occurs)
+                    with db.connect() as conn:
+                        user_input_embedding = conn.execute(sql_embedding,{'user_input':user_input}).fetchone()
+                        
+                except Exception as e:
+                    # If something goes wrong, handle the error in this section. This might
+                    # involve retrying or adjusting parameters depending on the situation.
+                    # [START_EXCLUDE]
+                    logger.exception(e)
+                    return Response(
+                        status=500,
+                        response="Unable to calculatevector embedding! Please check the "
+                        "application logs for more details.",
+                    )
+                
+                 #compare embedding against known pi examples in alloy db
+                sql_ve_compare = sqlalchemy.text("SELECT 1 - MAX(prompt_injection_embedding <=> :user_input_embedding) AS cosine_similarity_max, 2 - AVG(prompt_injection_embedding <=> :user_input_embedding) AS cosine_similarity_avg, 3 - MIN(prompt_injection_embedding <=> :user_input_embedding) AS cosine_similarity_min FROM threatmgmt;")
+                try:
+                    # Using a with statement ensures that the connection is always released
+                    # back into the pool at the end of statement (even if an error occurs)
+                    with db.connect() as conn:
+                        cosine_similarity= conn.execute(sql_ve_compare,{'user_input':user_input_embedding}).fetchall()
+                        
+                except Exception as e:
+                    # If something goes wrong, handle the error in this section. This might
+                    # involve retrying or adjusting parameters depending on the situation.
+                    # [START_EXCLUDE]
+                    logger.exception(e)
+                    return Response(
+                        status=500,
+                        response="Unable to calculatevector embedding! Please check the "
+                        "application logs for more details.",
+                )
+    
+
+                return Response(
+                    status=200,
+                    response=f"Vote successfully cast for '{team}' at time {time_cast}!",
+                )
+
+
+
+
             return
     
 

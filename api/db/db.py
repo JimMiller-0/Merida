@@ -42,3 +42,8 @@ def extension_db(db: sqlalchemy.engine.base.Engine) -> None:
 
 
 
+def index_table(db: sqlalchemy.engine.base.Engine) -> None:
+        index_create ="CREATE INDEX complaint_embed_idx ON threatmgmt USING ivf (prompt_injection_embedding vector_cosine_ops) WITH (lists = 20, quantizer = 'SQ8');"
+        with db.connect() as conn:
+            conn.execute(sqlalchemy.text(index_create))
+            conn.commit()
