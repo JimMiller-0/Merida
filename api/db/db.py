@@ -24,6 +24,21 @@ def migrate_db(db: sqlalchemy.engine.base.Engine) -> None:
             conn.execute(sqlalchemy.text(query_db_create))
             conn.commit()
 
+    # create 'votes' table in database if it does not already exist
+def pidetect_db(db: sqlalchemy.engine.base.Engine) -> None:
+        pidetect_db_create='CREATE TABLE IF NOT EXISTS threatmgmt (pi_id SERIAL NOT NULL, date_added timestamp NOT NULL, date_lastseen timestamp NOT NULL, prompt_injection_text TEXT NOT NULL, prompt_injection_embedding VECTOR(768) PRIMARY KEY (pi_id) );'
+        with db.connect() as conn:
+            conn.execute(sqlalchemy.text(pidetect_db_create))
+            conn.commit()
+
+def extension_db(db: sqlalchemy.engine.base.Engine) -> None:
+        ml_extension_create='CREATE EXTENSION IF NOT EXISTS google_ml_integration CASCADE;'
+        vector_extension_create='CREATE EXTENSION IF NOT EXISTS vector;'
+        with db.connect() as conn:
+            conn.execute(sqlalchemy.text(ml_extension_create))
+            conn.commit()
+            conn.execute(sqlalchemy.text(vector_extension_create))
+            conn.commit()
 
 
 
