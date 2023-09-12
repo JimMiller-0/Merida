@@ -18,28 +18,27 @@ from langchain.llms import VertexAI
 
 
 
-api = Namespace("cats", description="Cats related operations")
+api = Namespace("pi-detect", description="prompt injection detection")
 
-cat = api.model(
-    "Cat",
+pidetect = api.model(
+    "pi-detect",
     {
-        "id": fields.String(required=True, description="The cat identifier"),
-        "name": fields.String(required=True, description="The cat name"),
+        "user_input": fields.String(required=True, description="original text"),
+        "pi_detected": fields.String(required=True, description="Bool - prompt injection detection status"),
     },
 )
 
-CATS = [
-    {"id": "felix", "name": "Felix"},
+PIDETECT_RESPONSE = [
+    {"user_input": "medor", "pi_detected": "Medor"},
 ]
 
 
 @api.route("/")
-class CatList(Resource):
-    @api.doc("list_cats")
-    @api.marshal_list_with(cat)
+class PIList(Resource):
+    @api.doc("list_pi")
+    #@api.marshal_list_with(cat)
     def get(self):
-        """List all cats"""
-        return CATS
+        return make_response({"pi_detect":"This API is for detecting prompt injection in user input"}, 200)
 
 
 @api.route("/wrapping", methods=["POST"])
